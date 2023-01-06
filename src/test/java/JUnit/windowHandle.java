@@ -10,6 +10,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.time.Duration;
+import java.util.Set;
 
 public class windowHandle {
 
@@ -34,7 +35,7 @@ public class windowHandle {
 
     @After
     public void tearDown(){
-        driver.close();
+        driver.quit();
     }
 
     @Test
@@ -52,16 +53,50 @@ public class windowHandle {
         String expectedTitle = "The Internet";
         String actualTitle = driver.getTitle();
 
+        String ilkWHDegeri = driver.getWindowHandle();
+
         Assert.assertEquals(expectedTitle , actualTitle);
 
         //Click Here butonuna basın.
         driver.findElement(By.xpath("//*[text()='Click Here']")).click();
+        Thread.sleep(3000);
 
         //Acilan yeni pencerenin sayfa başlığının (title) “New Window” oldugunu dogrulayin.
 
+        Set<String> tumWHDegerleriSeti = driver.getWindowHandles();
+
+        String ikinciSayfaWHDegeri = "";
+        for (String each:tumWHDegerleriSeti
+             ) {
+            if (!each.equals(ilkWHDegeri)){
+                ikinciSayfaWHDegeri=each;
+            }
+        }
+
+        driver.switchTo().window(ikinciSayfaWHDegeri);
+        String expectedNewPageTitle = "New Window";
+        String actualNewPageTitle = driver.getTitle();
+
+        Assert.assertEquals(expectedNewPageTitle, actualNewPageTitle);
+
+        //Sayfadaki textin “New Window” olduğunu doğrulayın.
+        String expectedIkınciSayfaText = "New Window";
+        String actualIkinciSayfaText = driver.findElement(By.xpath("(//*[text()='New Window'])[2]")).getText();
+
+        Assert.assertEquals(expectedIkınciSayfaText, actualIkinciSayfaText);
 
 
-        Thread.sleep(2000);
+        //Bir önceki pencereye geri döndükten sonra sayfa başlığının “The Internet” olduğunu doğrulayın
+        driver.switchTo().window(ilkWHDegeri);
+        String expectedIlkSayfaTitle = "The Internet";
+        String actualIlkSayfaTitle = driver.getTitle();
+
+        Assert.assertEquals(expectedIlkSayfaTitle, actualIlkSayfaTitle);
+
+
+
+
+        Thread.sleep(3000);
 
 
 
