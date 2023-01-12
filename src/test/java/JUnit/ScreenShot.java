@@ -29,12 +29,7 @@ public class ScreenShot extends TestBase {
 
 
         // Tum sayfanin screenshot'ini alin
-        TakesScreenshot tss = (TakesScreenshot) driver;
-        File tumsayfaScreenShot = new File("target/ekranGoruntusu/Nutella.jpg");
-
-        File geciciDosya = tss.getScreenshotAs(OutputType.FILE);
-
-        FileUtils.copyFile(geciciDosya,tumsayfaScreenShot);
+        ReusableMethods.tumSayfaScreenshotCek(driver);
 
         ReusableMethods.bekle(3);
     }
